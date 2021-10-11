@@ -1,5 +1,5 @@
 # DRIM-Game
-Tous le code et les documents nécessaire à la résolution du DRIM Game 2021.
+Tout le code et les documents nécessaires à la résolution du DRIM Game 2021.
  
 Le sujet est le suivant : "Détermination d’un modèle de projection de matrice de migration dans un portefeuille de crédits."
 
