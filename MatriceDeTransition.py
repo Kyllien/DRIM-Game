@@ -17,7 +17,9 @@ data = data.rename(columns={"classe": "State", "dtf_per_trt": "Time", "ID_BCR_TR
 data["Time"]=pd.to_datetime(data["Time"])
 
 #Creation du Jeu Test
-#df = data.sample(10000)
+#df = data.sample(1000000)
+#df.to_csv('C:/Users/33640/source/repos/Kyllien/DRIM-Game/data_sample.csv')
+
 df = data.head(1000000)
 df = df.sort_values(by=["ID","Time"])
 
