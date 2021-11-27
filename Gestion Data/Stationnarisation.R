@@ -16,7 +16,7 @@ for (i in (3:length(baseAll))){
 baseAll$Date <- as.Date(baseAll$Date)
 
 Stationnarite <- function(df){
-  #On met les deux premiere colonnes dans la seconde base car cest la variable � expliquer et la date
+  #On met les deux premiere colonnes dans la seconde base car cest la variable à expliquer et la date
   df_diff <- df[-1,c(1,2)]
   for (i in (3:length(df))){
     Cname <- colnames(df_diff)
@@ -37,9 +37,40 @@ Stationnarite <- function(df){
       }
     }
     else{
-      df_diff<-cbind(df_diff,log(df[-1,i]))
+      df_diff<-cbind(df_diff,diff(df[,i],lag=1))
     }
     colnames(df_diff)<-Cname
   }
   return(df_diff)
 }
+
+base_diff <- Stationnarite(baseAll)
+#les warning sont du au pvalue trop grande dans les ADF tests
+
+#Verification de la stationnarite
+Verif_Statio <- function(df){
+  for (i in (3:length(df))){
+    if(substr(colnames(df[i]),1,3) != "Tx_"){
+      m1 <- ar(diff(df[,i]),method="mle")
+      Test1 <- adfTest(df[,i], lag=m1$order)
+      Test2 <- adfTest(df[,i], lag=m1$order, type="c")
+      Test3 <- adfTest(df[,i], lag=m1$order, type="ct")
+      if(Test1@test$p.value>0.1 | Test2@test$p.value>0.1 | Test3@test$p.value>0.1){
+        text = str_c("La variable",colnames(df[i])," n'est pas bien stationnarisé, à verifier avec des graphiques")
+        print(text)
+      }
+    }
+  }
+}
+
+Verif_Statio(base_diff)
+
+plot(base_diff$LCI)
+plot(base_diff$Ita_coin)
+plot(base_diff$Confiance_conso)
+plot(base_diff$Confiance_ent)
+plot(base_diff$USD_euro_change)
+plot(base_diff$Qt_GT_credit_conso)
+
+#Tout est ok, surtout que pour certaine la perde de stationnairte est dù à l'année 2020 qui est un peu mouvemente
+write.csv(base_diff,"base_diff.csv")
