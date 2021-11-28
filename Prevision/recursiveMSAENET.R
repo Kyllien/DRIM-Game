@@ -32,7 +32,7 @@ for (i in 1:12) {
   pred <- c(pred, predict(model_cv, newx = depvar[(107+i),]))	# one-step ahead forecast 
 }
 pred
-
+model_cv$beta
 
 rmse(y[c(107:118)],pred)
 mse(y[c(107:118)],pred)
