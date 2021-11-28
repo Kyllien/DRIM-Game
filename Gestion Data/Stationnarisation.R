@@ -71,23 +71,23 @@ plot(base_diff$Ita_coin)
 plot(base_diff$Confiance_conso)
 plot(base_diff$Confiance_ent)
 plot(base_diff$USD_euro_change)
-plot(base_diff$Qt_GT_credit_conso)
+
+base_diff$Qt_GT_interet_banc <- NULL
 
 #Tout est ok, surtout que pour certaine la perte de stationnatite est dù à l'année 2020 qui est un peu mouvemente
 
 #Outliers
-df <- ts(base_diff[-c(120:131),3],start = c(2010,02), frequency=12)
+df <- ts(base_diff[-c(120:132),3],start = c(2010,02), frequency=12)
 fit <- tso(df)
 plot(fit)
 show(fit)
-adj <- fit$yadj
-#11 valeurs atyppiques qui sont modifie à l'aide de tso
-
-adj <- as.data.frame(as.numeric(adj))
-for (i in (1:12)){
-  adj[nrow(adj)+1,] <- NA
-}
-base_diff$Tx_Defaut <- adj
-
+# adj <- fit$yadj
+# #0 valeurs atyppiques qui sont modifie à l'aide de tso
+# 
+# adj <- as.data.frame(as.numeric(adj))
+# for (i in (1:12)){
+#   adj[nrow(adj)+1,] <- NA
+# }
+# base_diff$Tx_Defaut <- adj
 
 write.csv(base_diff,"base_diff.csv")
