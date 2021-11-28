@@ -59,6 +59,6 @@ pred
 
 plot(pred)
 
+write.csv(pred,file="forecast_aenet.csv")
 
-write(t(pred),file="forecast_aenet.txt",ncolumn=1,append=FALSE)
 
