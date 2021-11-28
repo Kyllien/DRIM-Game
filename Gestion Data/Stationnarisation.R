@@ -2,6 +2,7 @@ library(readxl)
 library(stringr)
 library(xts)
 library(fUnitRoots)
+library(tsoutliers)
 
 setwd("C:/Users/33640/OneDrive/Bureau/DRIM")
 base1 <- read_xlsx("base_Tx1.xlsx",sheet='Data par mois')
@@ -16,7 +17,7 @@ for (i in (3:length(baseAll))){
 baseAll$Date <- as.Date(baseAll$Date)
 
 Stationnarite <- function(df){
-  #On met les deux premiere colonnes dans la seconde base car cest la variable Ã  expliquer et la date
+  #On met les deux premiere colonnes dans la seconde base car cest la variable à expliquer et la date
   df_diff <- df[-1,c(1,2)]
   for (i in (3:length(df))){
     Cname <- colnames(df_diff)
@@ -56,7 +57,7 @@ Verif_Statio <- function(df){
       Test2 <- adfTest(df[,i], lag=m1$order, type="c")
       Test3 <- adfTest(df[,i], lag=m1$order, type="ct")
       if(Test1@test$p.value>0.1 | Test2@test$p.value>0.1 | Test3@test$p.value>0.1){
-        text = str_c("La variable",colnames(df[i])," n'est pas bien stationnarisÃ©, Ã  verifier avec des graphiques")
+        text = str_c("La variable",colnames(df[i])," n'est pas bien stationnarisé, à verifier avec des graphiques")
         print(text)
       }
     }
@@ -72,5 +73,21 @@ plot(base_diff$Confiance_ent)
 plot(base_diff$USD_euro_change)
 plot(base_diff$Qt_GT_credit_conso)
 
-#Tout est ok, surtout que pour certaine la perde de stationnairte est dÃ¹ Ã  l'annÃ©e 2020 qui est un peu mouvemente
+#Tout est ok, surtout que pour certaine la perte de stationnatite est dù à l'année 2020 qui est un peu mouvemente
+
+#Outliers
+df <- ts(base_diff[-c(120:131),3],start = c(2010,02), frequency=12)
+fit <- tso(df)
+plot(fit)
+show(fit)
+adj <- fit$yadj
+#11 valeurs atyppiques qui sont modifie à l'aide de tso
+
+adj <- as.data.frame(as.numeric(adj))
+for (i in (1:12)){
+  adj[nrow(adj)+1,] <- NA
+}
+base_diff$Tx_Defaut <- adj
+
+
 write.csv(base_diff,"base_diff.csv")
