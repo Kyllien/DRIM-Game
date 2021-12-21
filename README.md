@@ -5,10 +5,13 @@ Le sujet est le suivant : "Détermination d’un modèle de projection de matric
 
 L’objectif du sujet est de déterminer une méthode de projection alternative de matrice de migration et d’en évaluer la capacité prédictive au travers d’un backtesting.
 
-Fonction matrice de corrélation :
+3 méthodes sont utlisées afin de faire la prédiction des matrices PIT : 
+ - méthode classique : modèle de Merton Vasicek avec prédiction sur le taux de défaut obtenus à l'aide des matrices empiriques
+ - méthode alternative : création d'un index de crédit pour chaque ligne (classe) de chaque matrice PIT, et prediction de ces credit index afin d'obtenir les matrices PIT demandées.
+ - méthode alternative : prédiction des matrices PIT à partir d'une modelisation et prédiction de chaque cellule des matrices PIT cumulées empiriques, obtention de 100 modèles afin de faire la prévision des 100 cellules. Utilisation des matrices cumulées pour faire la prédiction car il faut garder la propriété que la somme de chaque ligne est égale à 1, et donc pas besoin de faire la prédiction de la première colonne, c'est à dire de toute les probabilités conditionnelles de migration en classe 1 car celle-ci est toujours égale à 1.
 
-var.signi <- base_full2[,c("Qt_Eni","Tx_I_Deposits_E","Tx_I_Loans","Tx_bons_tresor","Qt_Telecom_ita","Tx_Interet_Loans_House",
-                           "Tx_Bon_Tresor_10","Tx_Loans_Household","Tx_Debt_Securities","Tx_interet_CT","Qt_Debt_Financial","Qt_Debt_Resident")]
+Les dossiers de previsions sont des fichiers R permettant la modélisation et la prediction du taux de défaut pour la méthode de Merton Vasicek, mais aussi pour les deux émthodes alternatives.
 
-library("PerformanceAnalytics")
-chart.Correlation(var.signi, histogram=FALSE, pch=19)
+La modélisation GAM est utilisé pour faire de modélisation sur le taux de défaut pour la méthode de Merton Vasicek.
+
+Le fichier python "MatriceGood" permet la création des différentes matrices PIT et TTC, et la gestion de la base brute.
